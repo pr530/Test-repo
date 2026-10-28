@@ -1,0 +1,118 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>A tiny question for you ♡</title>
+  <style>
+    :root { --rose:#e87991; --deep:#73384b; }
+    * { box-sizing: border-box; }
+    body {
+      margin:0; min-height:100vh; display:grid; place-items:center; padding:22px; overflow:hidden;
+      color:var(--deep); font-family:Georgia,"Times New Roman",serif;
+      background:radial-gradient(circle at 15% 18%,#ffe1e8 0 2px,transparent 3px),
+                 radial-gradient(circle at 82% 25%,#f7c6d2 0 2px,transparent 3px),
+                 linear-gradient(135deg,#fff1f3,#fffaf4 55%,#fbe3e8);
+    }
+    .heart { position:fixed; opacity:.22; color:#d85c7a; animation:float 7s ease-in-out infinite; pointer-events:none; }
+    .h1 { top:9%;left:9%;font-size:28px; } .h2 { right:11%;bottom:12%;font-size:38px;animation-delay:-3s; }
+    .h3 { right:15%;top:13%;font-size:19px;animation-delay:-1s; }
+    @keyframes float { 0%,100%{transform:translateY(0) rotate(-8deg)}50%{transform:translateY(-16px) rotate(8deg)} }
+    .card {
+      width:min(100%,520px); text-align:center; padding:clamp(28px,7vw,52px) 26px;
+      border:1px solid rgba(216,92,122,.22); border-radius:28px; background:rgba(255,255,255,.82);
+      box-shadow:0 22px 70px rgba(130,54,77,.13); backdrop-filter:blur(8px); position:relative;
+    }
+    .eyebrow { font:700 11px/1.4 Arial,sans-serif;letter-spacing:.22em;text-transform:uppercase;color:#c16a81; }
+    .tiny-heart { font-size:28px;margin:14px 0 8px; }
+    h1 { font-size:clamp(30px,7vw,43px);font-weight:500;line-height:1.12;margin:8px 0 18px; }
+    p { font-size:17px;line-height:1.7;margin:0 auto 12px;max-width:390px; }
+    .question { font-size:19px;margin-top:20px; }
+    .buttons { display:flex;align-items:center;justify-content:center;flex-wrap:wrap;gap:13px;margin-top:26px;min-height:54px; }
+    button { border:0;border-radius:999px;padding:14px 22px;font:700 14px Arial,sans-serif;cursor:pointer;transition:transform .2s,box-shadow .2s,background .2s; }
+    .yes { color:white;background:linear-gradient(135deg,#e87991,#c94f72);box-shadow:0 8px 20px #e8799145; }
+    .yes:hover { transform:translateY(-2px);box-shadow:0 12px 24px #e8799155; }
+    .no { color:#a45c70;background:#fff0f3;border:1px solid #f2c4cf;position:relative; }
+    .no:hover { transform:rotate(-3deg) translateX(5px); }
+    .note { font:12px Arial,sans-serif;color:#b17b89;margin-top:25px; }
+    .result { display:none;margin-top:24px;padding:18px;border-radius:18px;background:#fff0f3;font-size:17px;line-height:1.6; }
+    .result.show { display:block;animation:pop .35s ease-out; }
+    .page { display:none; } .page.active { display:block;animation:pop .4s ease-out; }
+    @keyframes pop { from{opacity:0;transform:translateY(8px) scale(.98)}to{opacity:1;transform:translateY(0) scale(1)} }
+    @media(prefers-reduced-motion:reduce){*,*::before,*::after{animation:none!important;transition:none!important}}
+  </style>
+</head>
+<body>
+  <div class="heart h1">♡</div><div class="heart h2">♥</div><div class="heart h3">♡</div>
+  <main class="card">
+    <section class="page active" id="page1">
+      <div class="eyebrow">a tiny question, just for you</div>
+      <div class="tiny-heart">🌷 ♡</div>
+      <h1>Can I ask you<br>something?</h1>
+      <p>Some names just feel a little more special when they belong to someone you like talking to…</p>
+      <p class="question">Would you let me call you <strong>“Vaanu”</strong>? 🙈</p>
+      <div class="buttons">
+        <button class="yes" id="yesVaanu">Okay, you can 💗</button>
+        <button class="no" id="noVaanu">No 🙈</button>
+      </div>
+      <div id="result1" class="result" role="status" aria-live="polite"></div>
+      <div class="note">Just a little nickname question. No pressure. ♡</div>
+    </section>
+
+    <section class="page" id="page2">
+      <div class="eyebrow">one more tiny question</div>
+      <div class="tiny-heart">☕ 💕</div>
+      <h1>Now that’s settled…</h1>
+      <p>I was thinking it would be nice to spend a little time with you, talk about random things, and let a coffee do its thing.</p>
+      <p class="question">So, would you go for a coffee with me sometime, Vaanu? 🌸</p>
+      <div class="buttons">
+        <button class="yes" id="yesCoffee">Okay, coffee it is ☕</button>
+        <button class="no" id="noCoffee">No 🙈</button>
+      </div>
+      <div id="result2" class="result" role="status" aria-live="polite"></div>
+      <div class="note">Your answer matters — always. ♡</div>
+    </section>
+  </main>
+  <script>
+    const page1 = document.getElementById('page1');
+    const page2 = document.getElementById('page2');
+    const result1 = document.getElementById('result1');
+    const result2 = document.getElementById('result2');
+
+    function makeNoShy(button, result, finalMessage) {
+      let count = 0;
+      button.addEventListener('click', () => {
+        count++;
+        if (count === 1) {
+          button.textContent = 'Wait… really? 🥺';
+          button.style.transform = 'translate(5px,-3px) rotate(-3deg)';
+        } else if (count === 2) {
+          button.textContent = 'I’m a little shy too 🙈';
+          button.style.transform = 'translate(-4px,3px) rotate(3deg)';
+        } else {
+          result.textContent = finalMessage;
+          result.classList.add('show');
+          button.textContent = 'Okay 💛';
+          button.style.transform = 'none';
+        }
+      });
+    }
+
+    document.getElementById('yesVaanu').addEventListener('click', () => {
+      page1.classList.remove('active');
+      page2.classList.add('active');
+    });
+
+    document.getElementById('yesCoffee').addEventListener('click', () => {
+      result2.innerHTML = 'Okay, this made me smile. 🥹💕<br><strong>Now you just have to pick the coffee day.</strong>';
+      result2.classList.add('show');
+      document.getElementById('yesCoffee').textContent = 'A little excited now 💗';
+    });
+
+    makeNoShy(document.getElementById('noVaanu'), result1,
+      'That’s completely okay. I’ll stick to your preferred name — no pressure at all. 🌷');
+    makeNoShy(document.getElementById('noCoffee'), result2,
+      'That’s completely okay. Thanks for being honest — no pressure at all. 🌷');
+  </script>
+</body>
+</html>
